@@ -68,7 +68,9 @@ export class TwitterClient {
 
     for (const tweet of fetchedTweets) {
       const medias = fetchedTweets.includes.medias(tweet);
-      const mediaUrls = medias.map((media) => media.url);
+      const mediaUrls = medias
+        .map((media) => media.url)
+        .filter((url) => url !== undefined);
 
       result.push({
         username: username,
