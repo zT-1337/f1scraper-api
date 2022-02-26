@@ -1,5 +1,9 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { TwitterApi, TwitterApiReadOnly } from 'twitter-api-v2';
+import {
+  TweetUserTimelineV2Paginator,
+  TwitterApi,
+  TwitterApiReadOnly,
+} from 'twitter-api-v2';
 import { TwitterClientConfig } from '../config/twitter-client-config';
 import { Tweet } from '../types/tweet';
 
@@ -18,6 +22,26 @@ export class TwitterClient {
     username: string,
     start: string,
   ): Promise<Tweet[]> {
+    const fetchedTweets = await this.fetchTweets({ username, start });
+    const result = this.convertFetchedTweetsToTweetList({
+      fetchedTweets,
+      username,
+    });
+
+    this.logger.log(
+      `Retrieved ${result.length} tweets from ${username} since ${start}`,
+    );
+
+    return result;
+  }
+
+  private async fetchTweets({
+    username,
+    start,
+  }: {
+    username: string;
+    start: string;
+  }) {
     const user = await this.twitterClient.v2.userByUsername(username);
     const tweets = await this.twitterClient.v2.userTimeline(user.data.id, {
       'tweet.fields': ['created_at', 'text', 'attachments', 'id'],
@@ -30,10 +54,20 @@ export class TwitterClient {
       await tweets.fetchNext();
     }
 
+    return tweets;
+  }
+
+  private convertFetchedTweetsToTweetList({
+    fetchedTweets,
+    username,
+  }: {
+    fetchedTweets: TweetUserTimelineV2Paginator;
+    username: string;
+  }): Tweet[] {
     const result: Tweet[] = [];
 
-    for (const tweet of tweets) {
-      const medias = tweets.includes.medias(tweet);
+    for (const tweet of fetchedTweets) {
+      const medias = fetchedTweets.includes.medias(tweet);
       const mediaUrls = medias.map((media) => media.url);
 
       result.push({
@@ -44,10 +78,6 @@ export class TwitterClient {
         mediaUrls: mediaUrls,
       });
     }
-
-    this.logger.log(
-      `Retrieved ${result.length} tweets from ${username} since ${start}`,
-    );
 
     return result;
   }
