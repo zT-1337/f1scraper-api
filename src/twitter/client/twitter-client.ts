@@ -1,5 +1,4 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { Cron, CronExpression } from '@nestjs/schedule';
 import { TwitterApi, TwitterApiReadOnly } from 'twitter-api-v2';
 import { TwitterClientConfig } from '../config/twitter-client-config';
 import { Tweet } from '../types/tweet';
@@ -17,13 +16,39 @@ export class TwitterClient {
 
   public async getAllTweetsFromUserSinceStart(
     username: string,
-    start: Date,
+    start: string,
   ): Promise<Tweet[]> {
-    return [];
-  }
+    const user = await this.twitterClient.v2.userByUsername(username);
+    const tweets = await this.twitterClient.v2.userTimeline(user.data.id, {
+      'tweet.fields': ['created_at', 'text', 'attachments', 'id'],
+      'media.fields': ['url'],
+      expansions: ['attachments.media_keys'],
+      start_time: start,
+    });
 
-  @Cron(CronExpression.EVERY_SECOND)
-  async testCron() {
-    this.logger.debug('hello');
+    while (!tweets.done) {
+      await tweets.fetchNext();
+    }
+
+    const result: Tweet[] = [];
+
+    for (const tweet of tweets) {
+      const medias = tweets.includes.medias(tweet);
+      const mediaUrls = medias.map((media) => media.url);
+
+      result.push({
+        username: username,
+        body: tweet.text,
+        published_at: new Date(tweet.created_at),
+        tweetUrl: `https://twitter.com/${username}/status/${tweet.id}`,
+        mediaUrls: mediaUrls,
+      });
+    }
+
+    this.logger.log(
+      `Retrieved ${result.length} tweets from ${username} since ${start}`,
+    );
+
+    return result;
   }
 }

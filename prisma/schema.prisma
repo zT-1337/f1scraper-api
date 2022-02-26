@@ -19,10 +19,10 @@ model News {
   publishedAt DateTime
   sourceUrl String
 
-  images Image[]
+  medias Media[]
 }
 
-model Image {
+model Media {
   url String @id
 
   news News @relation(fields: [newsId], references: [id])
