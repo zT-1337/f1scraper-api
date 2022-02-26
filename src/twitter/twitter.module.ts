@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { TwitterClient } from './client/twitter-client';
+import { TwitterClient } from './clients/twitter-client';
 import {
   TwitterClientConfig,
   twitterClientConfigFactory,
-} from './config/twitter-client-config';
+} from './configs/twitter-client-config';
 
 @Module({
   providers: [
