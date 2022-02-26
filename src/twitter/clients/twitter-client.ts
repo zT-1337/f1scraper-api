@@ -4,7 +4,7 @@ import {
   TwitterApi,
   TwitterApiReadOnly,
 } from 'twitter-api-v2';
-import { TwitterClientConfig } from '../config/twitter-client-config';
+import { TwitterClientConfig } from '../configs/twitter-client-config';
 import { Tweet } from '../types/tweet';
 
 @Injectable()
