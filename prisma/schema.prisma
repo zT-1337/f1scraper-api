@@ -22,9 +22,7 @@ model News {
 }
 
 model Image {
-  id Int @id @default(autoincrement())
-
-  url String
+  url String @id
 
   news News @relation(fields: [newsId], references: [id])
   newsId Int
