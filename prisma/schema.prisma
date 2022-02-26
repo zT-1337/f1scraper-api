@@ -1,0 +1,40 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model News {
+  id Int @id @default(autoincrement())
+
+  title String
+  author String
+  body String
+  publishedAt DateTime
+
+  images Image[]
+}
+
+model Image {
+  id Int @id @default(autoincrement())
+
+  url String
+
+  news News @relation(fields: [newsId], references: [id])
+  newsId Int
+}
+
+model ScraperLookup {
+  source ScraperSource @id
+  lastLookup DateTime
+}
+
+enum ScraperSource {
+  TWITTER
+}
