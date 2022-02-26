@@ -17,6 +17,7 @@ model News {
   author String
   body String
   publishedAt DateTime
+  sourceUrl String
 
   images Image[]
 }
