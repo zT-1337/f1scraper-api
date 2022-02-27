@@ -1,11 +1,12 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
+import { MediaType } from '@prisma/client';
 import {
   TweetUserTimelineV2Paginator,
   TwitterApi,
   TwitterApiReadOnly,
 } from 'twitter-api-v2';
 import { TwitterClientConfig } from '../configs/twitter-client-config';
-import { Tweet } from '../types/tweet';
+import { Tweet, TweetMedia } from '../types/tweet';
 
 @Injectable()
 export class TwitterClient {
@@ -68,16 +69,34 @@ export class TwitterClient {
 
     for (const tweet of fetchedTweets) {
       const medias = fetchedTweets.includes.medias(tweet);
-      const mediaUrls = medias
-        .map((media) => media.url)
-        .filter((url) => url !== undefined);
+      const tweetMedias: TweetMedia[] = medias
+        .map((media) => {
+          let type: MediaType = undefined;
+
+          switch (media.type) {
+            case 'video':
+              type = MediaType.VIDEO;
+              break;
+            case 'photo':
+              type = MediaType.IMAGE;
+              break;
+            default:
+              type = MediaType.OTHER;
+          }
+
+          return {
+            url: media.url,
+            type: type,
+          };
+        })
+        .filter((media) => media.url !== undefined && media.type !== undefined);
 
       result.push({
         username: username,
         body: tweet.text,
         published_at: new Date(tweet.created_at),
         tweetUrl: `https://twitter.com/${username}/status/${tweet.id}`,
-        mediaUrls: mediaUrls,
+        tweetMedias: tweetMedias,
       });
     }
 

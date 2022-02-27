@@ -58,8 +58,8 @@ export class ScrapeTweetsService {
     });
 
     const newsCreationPromises = tweets.map(async (tweet) => {
-      const medias = tweet.mediaUrls.map((mediaUrl) => {
-        return { url: mediaUrl } as Media;
+      const medias = tweet.tweetMedias.map((media) => {
+        return { url: media.url, mediaType: media.type } as Media;
       });
 
       return this.dbService.news.create({
@@ -84,7 +84,7 @@ export class ScrapeTweetsService {
     return;
   }
 
-  @Cron(CronExpression.EVERY_30_SECONDS)
+  @Cron(CronExpression.EVERY_10_SECONDS)
   public async scrapeJob() {
     //This locking mechanism only works because of the single threadedness of node.js
     if (this.isScraping) return;
