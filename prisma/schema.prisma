@@ -25,6 +25,8 @@ model News {
 model Media {
   url String @id
 
+  mediaType MediaType
+
   news News @relation(fields: [newsId], references: [id])
   newsId Int
 }
@@ -36,4 +38,9 @@ model ScraperLookup {
 
 enum ScraperSource {
   TWITTER
+}
+
+enum MediaType {
+  IMAGE
+  VIDEO
 }

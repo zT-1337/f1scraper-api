@@ -45,7 +45,7 @@ export class TwitterClient {
     const user = await this.twitterClient.v2.userByUsername(username);
     const tweets = await this.twitterClient.v2.userTimeline(user.data.id, {
       'tweet.fields': ['created_at', 'text', 'attachments', 'id'],
-      'media.fields': ['url'],
+      'media.fields': ['url', 'type'],
       expansions: ['attachments.media_keys'],
       start_time: start,
     });
