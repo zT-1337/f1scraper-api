@@ -23,8 +23,9 @@ model News {
 }
 
 model Media {
-  url String @id
+  id Int @id @default(autoincrement())
 
+  url String
   mediaType MediaType
 
   news News @relation(fields: [newsId], references: [id])
