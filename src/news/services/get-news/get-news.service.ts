@@ -21,6 +21,9 @@ export class GetNewsService {
       include: {
         medias: true,
       },
+      orderBy: {
+        publishedAt: 'desc',
+      },
     });
 
     return {
