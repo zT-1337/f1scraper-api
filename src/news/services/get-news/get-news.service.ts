@@ -15,6 +15,20 @@ export class GetNewsService {
     pageSize: number;
   }): Promise<Page<NewsWithMedia>> {
     const newsCount = await this.dbService.news.count();
+    const pageCount = Math.ceil(newsCount / pageSize);
+
+    if (page < 0) {
+      page = 0;
+    }
+
+    if (page >= pageCount) {
+      page = pageCount - 1;
+    }
+
+    if (pageSize < 0) {
+      pageSize = 1;
+    }
+
     const data = await this.dbService.news.findMany({
       skip: page * pageSize,
       take: pageSize,
@@ -30,7 +44,7 @@ export class GetNewsService {
       data: data,
       page: page,
       pageSize: pageSize,
-      pageCount: Math.ceil(newsCount / pageSize),
+      pageCount: pageCount,
       totalItemCount: newsCount,
     };
   }
