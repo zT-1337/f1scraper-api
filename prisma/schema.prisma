@@ -18,6 +18,7 @@ model News {
   body String
   publishedAt DateTime
   sourceUrl String
+  newsStatus NewsStatus @default(UNREAD)
 
   medias Media[]
 }
@@ -45,4 +46,10 @@ enum MediaType {
   IMAGE
   VIDEO
   OTHER
+}
+
+enum NewsStatus {
+  READ
+  UNREAD
+  BOOKMARKED
 }
