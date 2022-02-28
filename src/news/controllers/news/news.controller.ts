@@ -10,10 +10,12 @@ import {
   Param,
   Patch,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { NewsStatus } from '@prisma/client';
 import { convertStringToInteger } from 'src/common/convert';
 import { Page } from 'src/common/page';
+import { AuthGuard } from 'src/news/guards/auth.guard';
 import { GetNewsService } from 'src/news/services/get-news/get-news.service';
 import { UpdateNewsService } from 'src/news/services/update-news/update-news.service';
 import { NewsWithMedia } from 'src/news/types/news';
@@ -46,6 +48,7 @@ export class NewsController {
 
   @Patch(':id')
   @HttpCode(204)
+  @UseGuards(AuthGuard)
   public async setNewsStatus(
     @Param('id') idParam: string,
     @Body() request: { newsStatus: NewsStatus },
