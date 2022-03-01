@@ -1,4 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { NewsStatus } from '@prisma/client';
 import { Page } from 'src/common/page';
 import { DatabaseService } from 'src/database/database.service';
 import { NewsWithMedia } from 'src/news/types/news';
@@ -10,9 +11,11 @@ export class GetNewsService {
   public async getPaginatedNews({
     page,
     pageSize,
+    newsStatus,
   }: {
     page: number;
     pageSize: number;
+    newsStatus: NewsStatus;
   }): Promise<Page<NewsWithMedia>> {
     const newsCount = await this.dbService.news.count();
     const pageCount = Math.ceil(newsCount / pageSize);
@@ -32,6 +35,9 @@ export class GetNewsService {
     const data = await this.dbService.news.findMany({
       skip: page * pageSize,
       take: pageSize,
+      where: {
+        newsStatus: newsStatus,
+      },
       include: {
         medias: true,
       },

@@ -34,12 +34,21 @@ export class NewsController {
   public async getNewsPage(
     @Query('page') pageParam: string,
     @Query('pageSize') pageSizeParam: string,
+    @Query('newsStatus') newsStatus: NewsStatus,
   ): Promise<Page<NewsWithMedia>> {
     const page = convertStringToInteger(pageParam, 0);
     const pageSize = convertStringToInteger(pageSizeParam, 25);
 
+    if (newsStatus !== undefined && !isNewsStatus(newsStatus)) {
+      throw new BadRequestException('Invalid Value for news status');
+    }
+
     try {
-      return this.getNewsService.getPaginatedNews({ page, pageSize });
+      return this.getNewsService.getPaginatedNews({
+        page,
+        pageSize,
+        newsStatus,
+      });
     } catch (error) {
       this.logger.error(`Error during news loading: ${error.message}`);
       throw new BadRequestException('Bad Request');
