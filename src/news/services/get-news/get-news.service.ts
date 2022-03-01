@@ -26,9 +26,7 @@ export class GetNewsService {
       page = 0;
     }
 
-    if (page >= pageCount) {
-      page = Math.max(pageCount - 1, 0);
-    }
+    page = Math.min(pageCount, page);
 
     if (pageSize < 0) {
       pageSize = 1;
