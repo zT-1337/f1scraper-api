@@ -27,7 +27,7 @@ export class GetNewsService {
     }
 
     if (page >= pageCount) {
-      page = pageCount - 1;
+      page = Math.max(pageCount - 1, 0);
     }
 
     if (pageSize < 0) {
