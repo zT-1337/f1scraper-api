@@ -17,7 +17,9 @@ export class GetNewsService {
     pageSize: number;
     newsStatus: NewsStatus;
   }): Promise<Page<NewsWithMedia>> {
-    const newsCount = await this.dbService.news.count();
+    const newsCount = await this.dbService.news.count({
+      where: { newsStatus: newsStatus },
+    });
     const pageCount = Math.ceil(newsCount / pageSize);
 
     if (page < 0) {
