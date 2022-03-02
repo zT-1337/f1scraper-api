@@ -19,7 +19,7 @@ export class UpdateNewsService {
       });
     } catch (error) {
       this.logger.error(`Error while updating news: ${error.message}`);
-      throw new Error(error.message);
+      throw new Error('News not found by id');
     }
   }
 }
