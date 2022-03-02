@@ -84,7 +84,7 @@ export class ScrapeTweetsService {
     return;
   }
 
-  @Cron(CronExpression.EVERY_HOUR)
+  @Cron(CronExpression.EVERY_30_SECONDS)
   public async scrapeJob() {
     //This locking mechanism only works because of the single threadedness of node.js
     if (this.isScraping) return;
