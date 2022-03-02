@@ -1,0 +1,9 @@
+PORT=<Port>
+
+DATABASE_URL="postgresql://<username>:<password>@localhost:5432/f1scraper-dev?schema=public"
+API_AUTH_TOKEN=<Token>
+
+TWITTER_AUTH_TOKEN=<TWITTER_AUTH_TOKEN>
+TWITTER_USERNAMES_TO_LOOKUP=<acc1, acc2, acc3>
+
+LOOKUP_START=2022-01-01T00:00:00
