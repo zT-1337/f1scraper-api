@@ -1,5 +1,13 @@
 PORT=<Port>
 
+POSTGRES_USER=<username>
+POSTGRES_PASSWORD=<password>
+POSTGRES_DB=<db>
+
+PGADMIN_DEFAULT_EMAIL=<email>
+PGADMIN_DEFAULT_PASSWORD=<password>
+PGADMIN_LISTEN_PORT=<port>
+
 DATABASE_URL="postgresql://<username>:<password>@localhost:5432/f1scraper-dev?schema=public"
 API_AUTH_TOKEN=<Token>
 
